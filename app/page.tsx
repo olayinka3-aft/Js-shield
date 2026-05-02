@@ -8,15 +8,6 @@ export default function JSShield() {
   const [output, setOutput] = useState('');
   const [isCopying, setIsCopying] = useState(false);
 
-  const handleFileUpload = (e: any) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => setCode(event.target?.result as string);
-      reader.readAsText(file);
-    }
-  };
-
   const encrypt = () => {
     try {
       const res = JavaScriptObfuscator.obfuscate(code, {
@@ -24,65 +15,90 @@ export default function JSShield() {
         stringArray: true, stringArrayEncoding: ['base64']
       }).getObfuscatedCode();
       setOutput(res);
-    } catch { alert("Syntax Error in your JS!"); }
-  };
-
-  const copy = () => {
-    navigator.clipboard.writeText(output);
-    setIsCopying(true);
-    setTimeout(() => setIsCopying(false), 2000);
+    } catch { alert("Syntax Error!"); }
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white p-4 lg:p-12 font-sans selection:bg-blue-500/30">
+    <div className="min-h-screen bg-[#0f172a] text-slate-200 p-6 lg:p-12 font-sans overflow-x-hidden">
+      {/* Background Animation */}
+      <div className="fixed -z-10 top-0 left-0 w-full h-full">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 blur-[120px] rounded-full animate-pulse" />
+      </div>
+
       <div className="max-w-6xl mx-auto">
-        <header className="flex flex-col items-center mb-12 text-center">
-          <div className="bg-blue-500/10 p-3 rounded-2xl mb-4 border border-blue-500/20">
-            <Shield className="w-10 h-10 text-blue-400" />
+        <header className="flex flex-col items-center mb-12 text-center animate-in fade-in slide-in-from-top duration-700">
+          <div className="bg-blue-500/20 p-4 rounded-3xl mb-4 border border-blue-500/30 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+            <Shield className="w-12 h-12 text-blue-400" />
           </div>
-          <h1 className="text-4xl font-black tracking-tight mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
-            JS SHIELD PRO
+          <h1 className="text-5xl font-black tracking-tighter mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400">
+            JS-ENCRYPT PRO
           </h1>
-          <p className="text-slate-400 text-sm">Next-gen browser-side obfuscation.</p>
+          <p className="text-slate-400 font-medium tracking-wide">SHIELD YOUR LOGIC. PROTECT YOUR CODE.</p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-slate-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl">
-            <div className="flex justify-between items-center mb-4 text-xs font-bold uppercase tracking-widest text-blue-400">
-              <span className="flex items-center gap-2"><Zap className="w-4 h-4" /> Source Code</span>
-              <label className="cursor-pointer bg-white/5 hover:bg-white/10 px-3 py-1 rounded-lg border border-white/5 flex items-center gap-1">
-                <Upload className="w-3 h-3" /> Upload <input type="file" className="hidden" accept=".js" onChange={handleFileUpload} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          {/* Input Area */}
+          <div className="group bg-slate-800/40 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-8 shadow-2xl transition-all hover:border-blue-500/30">
+            <div className="flex justify-between items-center mb-6">
+              <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-blue-400">
+                <Zap className="w-4 h-4 fill-blue-400" /> Input Terminal
+              </span>
+              <label className="cursor-pointer bg-white/5 hover:bg-blue-600 px-5 py-2 rounded-xl border border-white/10 flex items-center gap-2 transition-all active:scale-90 text-xs font-bold">
+                <Upload className="w-4 h-4" /> UPLOAD .JS
+                <input type="file" className="hidden" accept=".js" onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => setCode(ev.target?.result as string);
+                    reader.readAsText(file);
+                  }
+                }} />
               </label>
             </div>
             <textarea
-              className="w-full h-80 bg-black/20 border border-white/5 rounded-2xl p-4 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-              placeholder="Paste JavaScript here..."
+              className="w-full h-80 bg-black/40 border border-white/5 rounded-2xl p-5 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-blue-100 placeholder:text-slate-600 shadow-inner"
+              placeholder="// Paste your raw JavaScript here..."
               value={code}
               onChange={(e) => setCode(e.target.value)}
             />
-            <button onClick={encrypt} className="w-full mt-4 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl font-bold transition-all active:scale-95 shadow-lg shadow-blue-900/20">
-              ENCRYPT & PROTECT
+            <button 
+              onClick={encrypt} 
+              className="w-full mt-6 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-2xl font-black text-sm tracking-widest shadow-[0_10px_25px_-5px_rgba(59,130,246,0.4)] transition-all active:scale-95 hover:shadow-blue-500/40"
+            >
+              RUN OBFUSCATION
             </button>
           </div>
 
-          <div className="bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-6 shadow-2xl">
-            <div className="flex justify-between items-center mb-4 text-xs font-bold uppercase tracking-widest text-emerald-400">
-              <span className="flex items-center gap-2"><Lock className="w-4 h-4" /> Protected Result</span>
-              <div className="flex gap-2">
-                <button onClick={copy} className="p-2 bg-white/5 hover:bg-white/10 rounded-lg"><Copy className={`w-4 h-4 ${isCopying ? 'text-emerald-400' : ''}`} /></button>
+          {/* Output Area */}
+          <div className="bg-slate-900/80 backdrop-blur-2xl border border-white/5 rounded-[2rem] p-8 shadow-2xl relative">
+            <div className="flex justify-between items-center mb-6">
+              <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">
+                <Lock className="w-4 h-4 shadow-sm" /> Encrypted Result
+              </span>
+              <div className="flex gap-3">
+                <button onClick={() => {
+                   navigator.clipboard.writeText(output);
+                   setIsCopying(true);
+                   setTimeout(() => setIsCopying(false), 2000);
+                }} className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all active:scale-90 border border-white/5">
+                  <Copy className={`w-5 h-5 ${isCopying ? 'text-emerald-400' : 'text-slate-400'}`} />
+                </button>
                 <button onClick={() => {
                   const blob = new Blob([output], { type: 'text/javascript' });
-                  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "shielded.js"; a.click();
-                }} disabled={!output} className="p-2 bg-white/5 hover:bg-white/10 rounded-lg disabled:opacity-20"><Download className="w-4 h-4" /></button>
+                  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "encrypted_logic.js"; a.click();
+                }} disabled={!output} className="p-3 bg-white/5 hover:bg-white/10 rounded-xl transition-all active:scale-90 border border-white/5 disabled:opacity-10">
+                  <Download className="w-5 h-5 text-slate-400" />
+                </button>
               </div>
             </div>
             <textarea
-              className="w-full h-[400px] bg-black/40 border border-emerald-500/10 rounded-2xl p-4 font-mono text-xs text-emerald-500/80 focus:outline-none"
-              readOnly value={output} placeholder="Encrypted code will appear here..."
+              className="w-full h-[410px] bg-black/60 border border-emerald-500/10 rounded-2xl p-5 font-mono text-[10px] leading-relaxed text-emerald-400/80 focus:outline-none shadow-inner"
+              readOnly value={output} placeholder="Waiting for input..."
             />
           </div>
         </div>
       </div>
     </div>
   );
-}
+                      }
+            
