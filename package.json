@@ -1,28 +1,28 @@
 {
-  "name": "js-shield",
+  "name": "js-shield-pro",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint"
   },
-    "dependencies": {
+  "dependencies": {
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
     "javascript-obfuscator": "latest",
     "lucide-react": "latest",
-    "@tailwindcss/postcss": "latest"
+    "@tailwindcss/postcss": "latest",
+    "tailwindcss": "latest"
   },
-
   "devDependencies": {
     "autoprefixer": "latest",
     "postcss": "latest",
-    "tailwindcss": "latest",
     "typescript": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest"
   }
-  }
+}
